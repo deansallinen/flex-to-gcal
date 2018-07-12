@@ -2,6 +2,10 @@
   "name": "",
   "version": "",
   "dependencies": {
+    "@types/node-fetch": "^2.1.1",
+    "date-fns": "^1.29.0",
+    "lodash": "^4.17.10",
+    "node-fetch": "^2.1.2",
     "npm": "^6.1.0"
   }
 }
