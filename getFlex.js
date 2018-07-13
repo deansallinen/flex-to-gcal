@@ -25,7 +25,6 @@ const getFlexCookie = async (user, pass) => {
     try {
         const response = await fetch(AUTH_URL, headers);
         const cookie = await response.headers.get('set-cookie');
-        console.log(cookie)
         return cookie;
     } catch (err) {
         console.error(err);
@@ -53,7 +52,6 @@ const getFlexCal = async (start, end) => {
     try {
         const response = await fetch(URL, headers);
         const data = await response.json();
-        console.log(data)
         return data;
     } catch (err) {
         console.error(err);
