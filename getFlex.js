@@ -1,64 +1,79 @@
-const {
-    USERNAME,
-    PASSWORD
-} = require("./secrets");
-const {
-    format
-} = require('date-fns');
+const { format } = require('date-fns');
 const fetch = require('node-fetch');
-const {
-    URLSearchParams
-} = require('url');
+const { URLSearchParams } = require('url');
+const { USERNAME, PASSWORD } = require('./secrets');
+
 
 const getFlexCookie = async (user, pass) => {
-    const AUTH_URL = 'https://loungeworks.flexrentalsolutions.com/rest/core/authenticate';
+  const AUTH_URL = 'https://loungeworks.flexrentalsolutions.com/rest/core/authenticate';
 
-    const params = new URLSearchParams();
-    params.append('username', user);
-    params.append('password', pass);
+  const params = new URLSearchParams();
+  params.append('username', user);
+  params.append('password', pass);
 
-    const headers = {
-        method: 'POST',
-        body: params
-    };
+  const headers = {
+    method: 'POST',
+    body: params,
+  };
 
-    try {
-        const response = await fetch(AUTH_URL, headers);
-        const cookie = await response.headers.get('set-cookie');
-        return cookie;
-    } catch (err) {
-        console.error(err);
-    }
+  try {
+    const response = await fetch(AUTH_URL, headers);
+    const cookie = await response.headers.get('set-cookie');
+    return cookie;
+  } catch (err) {
+    throw (err);
+  }
+};
 
-}
+const COOKIE = getFlexCookie(USERNAME, PASSWORD);
 
 const getFlexCal = async (start, end) => {
-    const startDate = format(start, 'YYYY-MM-DD');
-    const endDate = format(end, 'YYYY-MM-DD');
-    const templateId = '1c864f10-d3cd-11e7-82d0-0030489e8f64';
-    const COOKIE = await getFlexCookie(USERNAME, PASSWORD);
+  const startDate = format(start, 'YYYY-MM-DD');
+  const endDate = format(end, 'YYYY-MM-DD');
+  const templateId = '1c864f10-d3cd-11e7-82d0-0030489e8f64';
 
-    const URL = 'https://loungeworks.flexrentalsolutions.com/rest/calendar/calendar?' +
-        'templateId=' + templateId +
-        '&startDate=' + startDate +
-        '&endDate=' + endDate;
+  const URL = `${'https://loungeworks.flexrentalsolutions.com/rest/calendar/calendar?'
+        + 'templateId='}${templateId
+  }&startDate=${startDate
+  }&endDate=${endDate}`;
 
-    const headers = {
-        'headers': {
-            'cookie': COOKIE
-        }
-    }
+  const headers = {
+    headers: {
+      cookie: await COOKIE,
+    },
+  };
 
-    try {
-        const response = await fetch(URL, headers);
-        const data = await response.json();
-        return data;
-    } catch (err) {
-        console.error(err);
-    }
+  try {
+    const response = await fetch(URL, headers);
+    const data = await response.json();
+    return data;
+  } catch (err) {
+    throw (err);
+  }
+};
 
-}
+const getFlexDetails = async (eventId) => {
+  const URL = `https://loungeworks.flexrentalsolutions.com/rest/elements/get?id=${eventId}`;
+  const headers = {
+    headers: {
+      cookie: await COOKIE,
+    },
+  };
+
+  try {
+    const response = await fetch(URL, headers);
+    const data = await response.json();
+    return {
+      loadInTime: data.loadInTime,
+      loadOutTime: data.loadOutTime,
+    };
+  } catch (err) {
+    throw (err);
+  }
+};
+
 
 module.exports = {
-    getFlexCal
+  getFlexCal,
+  getFlexDetails,
 };

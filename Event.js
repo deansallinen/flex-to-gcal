@@ -1,26 +1,27 @@
 class Event {
-    constructor(elementId, startDate, endDate, status, manager, displayText, typeId, typeName, locationName) {
-        this.elementId = elementId;
-        this.startDate = new Date(startDate);
-        this.endDate = new Date(endDate);
-        this.status = status;
-        this.manager = manager;
-        this.displayText = displayText;
-        this.typeId = typeId;
-        this.typeName = typeName;
-        this.locationName = locationName;
-    }
+  constructor(event) {
+    this.elementId = event.elementId;
+    this.startDate = new Date(event.startDate);
+    this.endDate = new Date(event.endDate);
+    this.status = event.status;
+    this.manager = event.personResponsibleName;
+    this.displayText = event.displayText;
+    this.typeId = event.typeId;
+    this.typeName = event.typeName;
+    this.locationName = event.locationName;
+  }
 
-    get id() {
-        this.elementId.replace(/-/g, '');
-    }
+  get id() {
+    return this.elementId.replace(/-/g, '');
+  }
 
-    get title() {
-        return this.displayText.slice(10);
-    }
-    get number() {
-        return this.displayText.slice(0, 7);
-    }
+  get title() {
+    return this.displayText.slice(10);
+  }
+
+  get number() {
+    return this.displayText.slice(0, 7);
+  }
 }
 
-module.exports = Event
+module.exports = Event;
