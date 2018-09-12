@@ -59,14 +59,14 @@ const getFlexDetails = async (eventId) => {
       cookie: await COOKIE,
     },
   };
-
   try {
     const response = await fetch(URL, headers);
     const data = await response.json();
-    return {
-      loadInTime: data.loadInTime,
-      loadOutTime: data.loadOutTime,
-    };
+    // return {
+    //   loadInTime: data.loadInTime,
+    //   loadOutTime: data.loadOutTime,
+    // };
+    return data;
   } catch (err) {
     throw (err);
   }
@@ -76,4 +76,6 @@ const getFlexDetails = async (eventId) => {
 module.exports = {
   getFlexCal,
   getFlexDetails,
+  getFlexCookie,
+  COOKIE,
 };
