@@ -62,10 +62,22 @@ const getFlexDetails = async (eventId) => {
   try {
     const response = await fetch(URL, headers);
     const data = await response.json();
-    // return {
-    //   loadInTime: data.loadInTime,
-    //   loadOutTime: data.loadOutTime,
-    // };
+    return data;
+  } catch (err) {
+    throw (err);
+  }
+};
+
+const getFlexFinancials = async (eventId) => {
+  const URL = `https://loungeworks.flexrentalsolutions.com/rest/jobCosting/job-cost-aggregation-tree/${eventId}`;
+  const headers = {
+    headers: {
+      cookie: await COOKIE,
+    },
+  };
+  try {
+    const response = await fetch(URL, headers);
+    const data = await response.json();
     return data;
   } catch (err) {
     throw (err);
@@ -76,6 +88,7 @@ const getFlexDetails = async (eventId) => {
 module.exports = {
   getFlexCal,
   getFlexDetails,
+  getFlexFinancials,
   getFlexCookie,
   COOKIE,
 };

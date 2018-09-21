@@ -21,15 +21,3 @@
 [X]        create load object
 [X]        create strike object
 [X]        add event to insert array
-
-try to insert objects from insert array
-    if object exists
-        try update object
-
-try to update objects from update array
-    if object doesn't exist
-        try to insert object
-
-try to delete events in delete array
-    if event doesn't exist
-        
