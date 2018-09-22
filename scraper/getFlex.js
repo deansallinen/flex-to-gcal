@@ -1,7 +1,7 @@
 const { format } = require('date-fns');
 const fetch = require('node-fetch');
 const { URLSearchParams } = require('url');
-const { USERNAME, PASSWORD } = require('./secrets');
+const { USERNAME, PASSWORD } = require('../secrets');
 
 
 const getFlexCookie = async (user, pass) => {

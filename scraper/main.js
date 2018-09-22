@@ -1,35 +1,45 @@
 // const deepequal = require('deep-equal');
-const { parse } = require('date-fns');
+const { addMonths, subMonths } = require('date-fns');
 const moment = require('moment');
+const axios = require('axios');
 
-moment().format();
 const { getFlexCal, getFlexDetails, getFlexFinancials } = require('./getFlex');
-const Event = require('./Event');
+const Event = require('../models/Event');
 
-const startDate = new Date();
-const endDate = new Date();
+const now = new Date();
+const startDate = subMonths(now, 1);
+const endDate = addMonths(now, 1);
 
 const mergeDetails = (event, details, financials) => ({
   ...event,
   ...details,
   ...financials,
-  lastScraped: new Date(),
+  lastScraped: now,
   dateModified: details.dateModified ? moment(details.dateModified, 'DD-MM-YYYY HH:ss') : null,
   loadInDate: details.loadInDate ? moment(details.loadInDate, 'DD-MM-YYYY HH:ss') : null,
   loadOutDate: details.loadOutDate ? moment(details.loadOutDate, 'DD-MM-YYYY HH:ss') : null,
 });
 
-const getOneEvent = elementId => Event.findOne({ elementId }).exec();
+const getOneEvent = async (elementId) => {
+  try {
+    const res = await axios.get(`http://localhost:3000/v1/events/${elementId}`);
+    return res;
+  } catch (err) {
+    console.error(err);
+  }
+};
+
 const upsertEvent = (event) => {
   Event.findOneAndUpdate({ elementId: event.elementId }, event, { upsert: true })
     .then(res => console.log(res));
 };
-// const insertEvent = (event) => {
-//   Event.create(event, (err, doc) => {
-//     if (err) return err;
-//     return doc;
-//   });
+
+// const getOneEvent = elementId => Event.findOne({ elementId }).exec();
+// const upsertEvent = (event) => {
+//   Event.findOneAndUpdate({ elementId: event.elementId }, event, { upsert: true })
+//     .then(res => console.log(res));
 // };
+
 
 // const addAction = async (event) => {
 //   try {
@@ -84,16 +94,6 @@ const upsertEvent = (event) => {
 //   return { toDelete, toUpdate, toInsert };
 // };
 
-// const writeToDB = (cals) => {
-//   Event.insertMany(cals.toInsert, { ordered: false }, (err, docs) => {
-//     if (err) throw err; console.log(docs);
-//   });
-//   [...cals.toDelete, ...cals.toUpdate].map((event) => {
-//     Event.update({ elementId: event.elementId }, event, (err, doc) => {
-//       if (err) throw err; console.log(doc);
-//     });
-//   });
-// };
 
 const main = async () => {
   const fcal = await getFlexCal(startDate, endDate);
@@ -105,7 +105,9 @@ const main = async () => {
   return cals;
 };
 
-main();
+// main();
+
+getOneEvent('19ee3ab0-8aca-11e8-9e13-0030489e8f64').then(res => console.log(res.data.strike));
 
 module.exports = {
   main,

@@ -1,5 +1,5 @@
 const { getFlexCookie, getFlexCal, getFlexDetails } = require('./getFlex');
-const { USERNAME, PASSWORD } = require('./secrets');
+const { USERNAME, PASSWORD } = require('../secrets');
 
 test('login successful', async () => {
   const cookie = await getFlexCookie(USERNAME, PASSWORD);

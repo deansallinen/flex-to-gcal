@@ -10,6 +10,7 @@
   "dependencies": {
     "@google-cloud/storage": "^2.0.3",
     "@types/node-fetch": "^2.1.1",
+    "axios": "^0.18.0",
     "date-fns": "^1.29.0",
     "deep-equal": "^1.0.1",
     "diskdb": "^0.1.17",
