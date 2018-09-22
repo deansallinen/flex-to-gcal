@@ -18,7 +18,10 @@
     "koa": "^2.5.3",
     "koa-router": "^7.4.0",
     "lodash": "^4.17.10",
+<<<<<<< HEAD
     "moment": "^2.22.2",
+=======
+>>>>>>> 16e6317d1e47c1a9a3334d4a47307388dab22269
     "mongoose": "^5.2.6",
     "node-fetch": "^2.1.2",
     "node-google-calendar": "^1.1.1",

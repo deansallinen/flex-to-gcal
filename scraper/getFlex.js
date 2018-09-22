@@ -59,6 +59,7 @@ const getFlexDetails = async (eventId) => {
       cookie: await COOKIE,
     },
   };
+<<<<<<< HEAD:scraper/getFlex.js
   try {
     const response = await fetch(URL, headers);
     const data = await response.json();
@@ -78,6 +79,15 @@ const getFlexFinancials = async (eventId) => {
   try {
     const response = await fetch(URL, headers);
     const data = await response.json();
+=======
+  try {
+    const response = await fetch(URL, headers);
+    const data = await response.json();
+    // return {
+    //   loadInTime: data.loadInTime,
+    //   loadOutTime: data.loadOutTime,
+    // };
+>>>>>>> 16e6317d1e47c1a9a3334d4a47307388dab22269:getFlex.js
     return data;
   } catch (err) {
     throw (err);
@@ -88,7 +98,10 @@ const getFlexFinancials = async (eventId) => {
 module.exports = {
   getFlexCal,
   getFlexDetails,
+<<<<<<< HEAD:scraper/getFlex.js
   getFlexFinancials,
+=======
+>>>>>>> 16e6317d1e47c1a9a3334d4a47307388dab22269:getFlex.js
   getFlexCookie,
   COOKIE,
 };
