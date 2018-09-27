@@ -1,5 +1,5 @@
 // events controller
-const Event = require('../../models/Event')
+const Event = require('../models/Event')
 
 // Google Calendar Requests
 

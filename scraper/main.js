@@ -1,117 +1,103 @@
-// const deepequal = require('deep-equal');
-const { addMonths, subMonths } = require('date-fns');
+// scraper
+
+const { addMonths, subMonths, parse } = require('date-fns');
 const moment = require('moment');
 const axios = require('axios');
 
 const { getFlexCal, getFlexDetails, getFlexFinancials } = require('./getFlex');
-const Event = require('../models/Event');
+// const Event = require('../models/Event');
 
 const now = new Date();
-const startDate = subMonths(now, 1);
-const endDate = addMonths(now, 1);
+// const startDate = subMonths(now, 1);
+// const endDate = addMonths(now, 1);
+const startDate = now;
+const endDate = now;
 
-const mergeDetails = (event, details, financials) => ({
-  ...event,
-  ...details,
-  ...financials,
-  lastScraped: now,
-  dateModified: details.dateModified ? moment(details.dateModified, 'DD-MM-YYYY HH:ss') : null,
-  loadInDate: details.loadInDate ? moment(details.loadInDate, 'DD-MM-YYYY HH:ss') : null,
-  loadOutDate: details.loadOutDate ? moment(details.loadOutDate, 'DD-MM-YYYY HH:ss') : null,
-});
+
+const API = 'http://localhost:3000/v1';
 
 const getOneEvent = async (elementId) => {
   try {
-    const res = await axios.get(`http://localhost:3000/v1/events/${elementId}`);
-    return res;
+    const res = await axios.get(`${API}/events/${elementId}`);
+    // console.log(res.data);
+    return res.data;
   } catch (err) {
-    console.error(err);
+    throw err;
   }
 };
 
-const upsertEvent = (event) => {
-  Event.findOneAndUpdate({ elementId: event.elementId }, event, { upsert: true })
-    .then(res => console.log(res));
+const getAction = async (event) => {
+  try {
+    const res = await getOneEvent(event.elementId); // could speed this up with just necessary fields
+    if (res) {
+      if (parse(event.dateModified) !== parse(res.dateModified)) {
+        // update db Event.
+        if (['Cancelled', 'Closed'].includes(event.status)) {
+          return 'delete';
+        }
+        return 'update';
+      }
+      return null;
+    }
+    // insert to db
+    if (['Cancelled', 'Closed'].includes(event.status)) {
+      return null;
+    }
+    return 'insert';
+  } catch (err) {
+    throw err;
+  }
 };
 
-// const getOneEvent = elementId => Event.findOne({ elementId }).exec();
-// const upsertEvent = (event) => {
-//   Event.findOneAndUpdate({ elementId: event.elementId }, event, { upsert: true })
-//     .then(res => console.log(res));
-// };
+const updateDB = (calendarArray) => {
+  const toUpdate = calendarArray.filter(event => ['update', 'delete'].includes(event.actionNeeded));
+  const toInsert = calendarArray.filter(event => event.actionNeeded === 'insert');
+  // could send an array to the db in the future for a single request
+  // const inserted = toInsert.map(async event => axios.post(`${API}/events/`, await event));
+  // const updated = toUpdate.map(async event => axios.post(`${API}/events/${event.elementId}`, await event));
+  // return { inserted, updated };
+  return [...toUpdate, ...toInsert];
+};
 
 
-// const addAction = async (event) => {
-//   try {
-//     const res = await getOneEvent(event.elementId); // could speed this up with just necessary fields
-//     if (res) {
-//       if (parse(event.dateModified) > parse(res.lastScraped)) {
-//         // update db Event.
-//         if (['Cancelled', 'Closed'].includes(event.status)) {
-//           return ({ ...event, actionNeeded: 'delete' });
-//         }
-//         return ({ ...event, actionNeeded: 'update' });
-//       }
-//       return ({ ...event, actionNeeded: 'none' });
-//     }
-//     // insert to db
-//     if (['Cancelled', 'Closed'].includes(event.status)) {
-//       return ({ ...event, actionNeeded: 'none' });
-//     }
-//     return ({ ...event, actionNeeded: 'insert' });
-//   } catch (err) {
-//     throw err;
-//   }
-// };
+const getDetails = async (event) => {
+  const eventId = await event.elementId;
+  try {
+    const [details, financials] = await Promise.all([
+      getFlexDetails(eventId),
+      getFlexFinancials(eventId),
+    ]);
+    return { ...event, ...details, ...financials };
+  } catch (err) {
+    throw err;
+  }
+};
 
-// const sortToDB = (event) => {
-//   try {
-//     const res = await getOneEvent(event.elementId); // could speed this up with just necessary fields
-//     if (res) {
-//       if (parse(event.dateModified) > parse(res.lastScraped)) {
-//         // update db Event.
-//         if (['Cancelled', 'Closed'].includes(event.status)) {
-//           return ({ ...event, actionNeeded: 'delete' });
-//         }
-//         return ({ ...event, actionNeeded: 'update' });
-//       }
-//       return ({ ...event, actionNeeded: 'none' });
-//     }
-//     // insert to db
-//     if (['Cancelled', 'Closed'].includes(event.status)) {
-//       return ({ ...event, actionNeeded: 'none' });
-//     }
-//     return ({ ...event, actionNeeded: 'insert' });
-//   } catch (err) {
-//     throw err;
-//   }
-// };
-
-// const createStagingObject = (sortedCal) => {
-//   const toDelete = sortedCal.filter(event => event.actionNeeded === 'delete');
-//   const toUpdate = sortedCal.filter(event => event.actionNeeded === 'update');
-//   const toInsert = sortedCal.filter(event => event.actionNeeded === 'insert');
-//   return { toDelete, toUpdate, toInsert };
-// };
-
+const addMeta = async detailedEvent => ({
+  ...detailedEvent,
+  lastScraped: now,
+  dateModified: detailedEvent.dateModified ? moment(detailedEvent.dateModified, 'DD-MM-YYYY HH:ss') : null,
+  loadInDate: detailedEvent.loadInDate ? moment(detailedEvent.loadInDate, 'DD-MM-YYYY HH:ss') : null,
+  loadOutDate: detailedEvent.loadOutDate ? moment(detailedEvent.loadOutDate, 'DD-MM-YYYY HH:ss') : null,
+  actionNeeded: await getAction(detailedEvent),
+});
 
 const main = async () => {
   const fcal = await getFlexCal(startDate, endDate);
-  const details = fcal.map(async event => mergeDetails(event, await getFlexDetails(event.elementId), await getFlexFinancials(event.elementId)));
-  // const sortedCal = details.map(async event => sortToStagingArray(await event));
-  // const cals = createStagingObject(await Promise.all(sortedCal));
-  // const actions = details.map(async event => addAction(await event));
-  const cals = details.map(async event => upsertEvent(await event));
+  const details = fcal.map(await getDetails);
+  const actions = details.map(await addMeta);
+  const cals = updateDB(actions);
   return cals;
 };
 
 // main();
 
-getOneEvent('19ee3ab0-8aca-11e8-9e13-0030489e8f64').then(res => console.log(res.data.strike));
+
+// getOneEvent('19ee3ab0-8aca-11e8-9e13-0030489e8f64').then(res => console.log(res.data));
 
 module.exports = {
   main,
-  mergeDetails,
-  upsertEvent,
+  getAction,
   getOneEvent,
+  getDetails,
 };

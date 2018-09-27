@@ -1,4 +1,6 @@
-const { getFlexCookie, getFlexCal, getFlexDetails } = require('./getFlex');
+const {
+  getFlexCookie, getFlexCal, getFlexDetails, getFlexFinancials,
+} = require('./getFlex');
 const { USERNAME, PASSWORD } = require('../secrets');
 
 test('login successful', async () => {
@@ -27,4 +29,11 @@ test('gets details for event', async () => {
   expect(data).toBeDefined();
   expect(data).toHaveProperty('loadInDate');
   expect(data).toHaveProperty('loadOutDate');
+});
+
+test('gets financials for event', async () => {
+  const testId = '036c3130-8f83-11e8-9e13-0030489e8f64';
+  const data = await getFlexFinancials(testId);
+  expect(data).toBeDefined();
+  expect(data).toHaveProperty('plannedRevenue');
 });

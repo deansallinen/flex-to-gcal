@@ -1,6 +1,6 @@
 // reporting on events
 
-const Event = require('../../models/Event')
+const Event = require('../models/Event')
 
 async function weeklySum (ctx) {
     // fetch weekly summary of financials

@@ -7,30 +7,25 @@ const fcal = async () => {
   return event;
 };
 
-test('Merges event with details', async () => {
-  const event = await fcal();
-  const details = await getFlexDetails(event.elementId);
-  const merged = main.mergeDetails(event, details);
-  expect(merged).toBeDefined();
-  expect(merged).toHaveProperty('startDate');
-  expect(merged).toHaveProperty('loadInDate');
-});
-
-// test('Deep equals', () => {
-//   const a = { one: 'one', obj: { a: 'a' } };
-//   const b = { one: 'one', obj: { a: 'a' } };
-//   const res = main.areEqual(a, b);
-//   expect(res).toBe(true);
-// });
-
-test('Finds one event', async () => {
-  const id = '0d809ae0-9504-11e8-9e13-0030489e8f64';
+test('Finds one even in db', async () => {
+  const id = '67926830-6e74-11e8-9689-0030489e8f64';
   const res = await main.getOneEvent(id);
   expect(res).toBeDefined();
   expect(res).toHaveProperty('startDate');
   expect(res).toHaveProperty('loadInDate');
 });
 
-// test('Sort to staging array', () => {
+test('Returns detailed event', async () => {
+  const event = await fcal();
+  const res = await main.getDetails(event);
+  // console.log(res);
+  expect(res).toHaveProperty('loadInDate');
+  expect(res).toHaveProperty('plannedRevenue');
+});
 
-// })
+// test('Returns correct action', async () => {
+//   const event = await fcal();
+//   expect(event).toHaveProperty('elementId');
+//   expect(event).toHaveProperty('dateModified');
+//   // const res = await main.getAction(event);
+// });
