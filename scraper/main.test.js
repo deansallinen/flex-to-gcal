@@ -75,3 +75,15 @@ test('Returns correct action: No insert needed', async () => {
   // console.log(res);
   expect(res).toBe(null);
 });
+
+test('Add metadata on event object', async () => {
+  const detailedEvent = new Promise(((resolve, reject) => {
+    setTimeout(() => {
+      resolve({ elementId: '1' });
+    }, 300);
+  }));
+  const res = await main.addMeta(detailedEvent);
+  // console.log(res);
+  expect(res).toHaveProperty('elementId');
+  expect(res.actionNeeded).toBeDefined();
+});

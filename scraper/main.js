@@ -74,7 +74,7 @@ const getDetails = async (event) => {
 };
 
 const addMeta = async detailedEvent => ({
-  ...detailedEvent,
+  ...await detailedEvent,
   lastScraped: now,
   dateModified: detailedEvent.dateModified ? moment(detailedEvent.dateModified, 'DD-MM-YYYY HH:ss') : null,
   loadInDate: detailedEvent.loadInDate ? moment(detailedEvent.loadInDate, 'DD-MM-YYYY HH:ss') : null,
@@ -100,4 +100,5 @@ module.exports = {
   getAction,
   getOneEvent,
   getDetails,
+  addMeta,
 };
