@@ -79,19 +79,33 @@ const addMeta = async detailedEvent => ({
   dateModified: detailedEvent.dateModified ? moment(detailedEvent.dateModified, 'DD-MM-YYYY HH:ss') : null,
   loadInDate: detailedEvent.loadInDate ? moment(detailedEvent.loadInDate, 'DD-MM-YYYY HH:ss') : null,
   loadOutDate: detailedEvent.loadOutDate ? moment(detailedEvent.loadOutDate, 'DD-MM-YYYY HH:ss') : null,
-  actionNeeded: await getAction(detailedEvent, getOneEvent),
+  actionNeeded: await getAction(detailedEvent),
 });
+
+// const main = async () => {
+//   const fcal = await getFlexCal(startDate, endDate);
+//   const details = fcal.map(await getDetails);
+//   const actions = details.map(await addMeta);
+//   const cals = updateDB(actions);
+//   console.log(await cals);
+//   return cals;
+// };
+
+const getDetailsInOrder = (arr) => {
+  const results = [];
+  return arr.reduce(
+    (promiseChain, item) => promiseChain.then(() => getDetails(item).then(data => results.push(data))),
+    Promise.resolve(),
+  ).then(() => results);
+};
 
 const main = async () => {
   const fcal = await getFlexCal(startDate, endDate);
-  const details = fcal.map(await getDetails);
-  const actions = details.map(await addMeta);
-  const cals = updateDB(actions);
-  return cals;
+  const cals = getDetailsInOrder(fcal);
+  console.log(await cals);
 };
 
-// main();
-
+main().then(x => console.log(x));
 
 // getOneEvent('19ee3ab0-8aca-11e8-9e13-0030489e8f64').then(res => console.log(res.data));
 

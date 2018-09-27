@@ -77,13 +77,21 @@ test('Returns correct action: No insert needed', async () => {
 });
 
 test('Add metadata on event object', async () => {
-  const detailedEvent = new Promise(((resolve, reject) => {
+  const now = new Date();
+  const resp = new Promise(((resolve, reject) => {
     setTimeout(() => {
-      resolve({ elementId: '1' });
+      resolve({ data: { elementId: '1', dateModified: now, status: 'Confirmed' } });
     }, 300);
   }));
+  const detailedEvent = new Promise(((resolve, reject) => {
+    setTimeout(() => {
+      resolve({ elementId: '1', dateModified: now, status: 'Ready' });
+    }, 300);
+  }));
+  axios.get.mockResolvedValue(resp);
   const res = await main.addMeta(detailedEvent);
   // console.log(res);
   expect(res).toHaveProperty('elementId');
   expect(res.actionNeeded).toBeDefined();
+  expect(res.actionNeeded).toBe('update');
 });
