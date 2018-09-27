@@ -28,9 +28,9 @@ const getOneEvent = async (elementId) => {
 
 const getAction = async (event) => {
   try {
-    const res = await getOneEvent(event.elementId); // could speed this up with just necessary fields
+    const res = await getOneEvent(await event.elementId); // could speed this up with just necessary fields
     if (res) {
-      if (parse(event.dateModified) !== parse(res.dateModified)) {
+      if (event.dateModified !== res.dateModified) {
         // update db Event.
         if (['Cancelled', 'Closed'].includes(event.status)) {
           return 'delete';
@@ -79,7 +79,7 @@ const addMeta = async detailedEvent => ({
   dateModified: detailedEvent.dateModified ? moment(detailedEvent.dateModified, 'DD-MM-YYYY HH:ss') : null,
   loadInDate: detailedEvent.loadInDate ? moment(detailedEvent.loadInDate, 'DD-MM-YYYY HH:ss') : null,
   loadOutDate: detailedEvent.loadOutDate ? moment(detailedEvent.loadOutDate, 'DD-MM-YYYY HH:ss') : null,
-  actionNeeded: await getAction(detailedEvent),
+  actionNeeded: await getAction(detailedEvent, getOneEvent),
 });
 
 const main = async () => {
