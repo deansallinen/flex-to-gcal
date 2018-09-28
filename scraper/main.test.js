@@ -1,6 +1,6 @@
+const axios = require('axios');
 const main = require('./main');
 const { getFlexCookie, getFlexCal, getFlexDetails } = require('./getFlex');
-const axios = require('axios');
 
 const fcal = async () => {
   const cal = await getFlexCal(new Date(), new Date());
@@ -19,7 +19,7 @@ test.skip('Finds one event in db', async () => {
 });
 
 test('Returns detailed event', async () => {
-  const event = await fcal();
+  const event = { elementId: '67926830-6e74-11e8-9689-0030489e8f64' };
   const res = await main.getDetails(event);
   // console.log(res);
   expect(res).toHaveProperty('loadInDate');
@@ -38,7 +38,7 @@ test('Returns correct action: insert', async () => {
 
 test('Returns correct action: update', async () => {
   const now = new Date();
-  const resp = { data: { elementId: '1', dateModified: new Date(), status: 'Ready' } };
+  const resp = { data: { elementId: '1', dateModified: new Date('1995-12-17T03:24:00'), status: 'Ready' } };
   axios.get.mockResolvedValue(resp);
   const event = { elementId: '1', dateModified: now, status: 'Confirmed' };
   const res = await main.getAction(event);
@@ -48,7 +48,7 @@ test('Returns correct action: update', async () => {
 
 test('Returns correct action: delete', async () => {
   const now = new Date();
-  const resp = { data: { elementId: '1', dateModified: new Date(), status: 'Ready' } };
+  const resp = { data: { elementId: '1', dateModified: new Date('1995-12-17T03:24:00'), status: 'Ready' } };
   axios.get.mockResolvedValue(resp);
   const event = { elementId: '1', dateModified: now, status: 'Closed' };
   const res = await main.getAction(event);

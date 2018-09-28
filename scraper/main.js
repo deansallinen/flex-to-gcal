@@ -1,6 +1,5 @@
 // scraper
 
-const { addMonths, subMonths, parse } = require('date-fns');
 const moment = require('moment');
 const axios = require('axios');
 
@@ -30,7 +29,7 @@ const getAction = async (event) => {
   try {
     const res = await getOneEvent(await event.elementId); // could speed this up with just necessary fields
     if (res) {
-      if (event.dateModified !== res.dateModified) {
+      if (!moment(event.dateModified).isSame(res.dateModified)) {
         // update db Event.
         if (['Cancelled', 'Closed'].includes(event.status)) {
           return 'delete';
@@ -50,13 +49,14 @@ const getAction = async (event) => {
 };
 
 const updateDB = (calendarArray) => {
-  const toUpdate = calendarArray.filter(event => ['update', 'delete'].includes(event.actionNeeded));
-  const toInsert = calendarArray.filter(event => event.actionNeeded === 'insert');
-  // could send an array to the db in the future for a single request
-  // const inserted = toInsert.map(async event => axios.post(`${API}/events/`, await event));
-  // const updated = toUpdate.map(async event => axios.post(`${API}/events/${event.elementId}`, await event));
-  // return { inserted, updated };
-  return [...toUpdate, ...toInsert];
+  // could send an array to the db in the future for a single request?
+  const updated = calendarArray
+    .filter(event => ['update', 'delete'].includes(event.actionNeeded))
+    .map(event => axios.post(`${API}/events/${event.elementId}`, event));
+  const inserted = calendarArray
+    .filter(event => event.actionNeeded === 'insert')
+    .map(event => axios.post(`${API}/events/`, event));
+  return { inserted, updated };
 };
 
 
@@ -82,30 +82,26 @@ const addMeta = async detailedEvent => ({
   actionNeeded: await getAction(detailedEvent),
 });
 
-// const main = async () => {
-//   const fcal = await getFlexCal(startDate, endDate);
-//   const details = fcal.map(await getDetails);
-//   const actions = details.map(await addMeta);
-//   const cals = updateDB(actions);
-//   console.log(await cals);
-//   return cals;
-// };
-
+// Promise chain resolves events in order. This slows down the process
+// but avoids overloading the API with too many requests.
 const getDetailsInOrder = (arr) => {
   const results = [];
   return arr.reduce(
-    (promiseChain, item) => promiseChain.then(() => getDetails(item).then(data => results.push(data))),
-    Promise.resolve(),
+    (promiseChain, item) => promiseChain.then(() => getDetails(item)
+      .then(detailedItem => addMeta(detailedItem))
+      .then(data => results.push(data))),
+    Promise.resolve(), // Starts the chain with a resolved promise
   ).then(() => results);
 };
 
 const main = async () => {
   const fcal = await getFlexCal(startDate, endDate);
   const cals = getDetailsInOrder(fcal);
-  console.log(await cals);
+  const updated = updateDB(await cals);
+  console.log(updated);
 };
 
-main().then(x => console.log(x));
+// main();
 
 // getOneEvent('19ee3ab0-8aca-11e8-9e13-0030489e8f64').then(res => console.log(res.data));
 
