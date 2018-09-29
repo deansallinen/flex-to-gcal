@@ -9,8 +9,10 @@ const { getFlexCal, getFlexDetails, getFlexFinancials } = require('./getFlex');
 const now = moment();
 // const startDate = subMonths(now, 1);
 // const endDate = addMonths(now, 1);
-const startDate = now.subtract(1, 'week');
-const endDate = now.add(1, 'week');
+const startDate = now;
+const endDate = now;
+// const startDate = now.subtract(1, 'week');
+// const endDate = now.add(1, 'week');
 
 
 const API = 'http://localhost:3000/v1';
@@ -29,7 +31,7 @@ const getAction = async (event) => {
   try {
     const res = await getOneEvent(await event.elementId); // could speed this up with just necessary fields
     if (res) {
-      console.log(res);
+      // console.log(res);
       if (!moment(event.dateModified).isSame(res.dateModified)) {
         // update db Event.
         if (['Cancelled', 'Closed'].includes(event.status)) {

@@ -1,4 +1,4 @@
-## Flex to Gcal 
+# Flex to Gcal 
 
 This project consumes the Flex Rental Solutions API for our event schedule to allow us to run better reporting, create custom Google Calendars, Slackbots, etc. after saving it to a cloud database.
 

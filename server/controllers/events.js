@@ -45,11 +45,12 @@ async function create (ctx) {
 
 async function update (ctx) {
     // updates existing event
+    // console.log(ctx.request.body)
     const elementId = ctx.params.id;
-    const event = await Event.findOne({elementId});
-    // can do things with event object here
-    const updatedEvent = await event.save();
-    ctx.body = updatedEvent;
+    const update = ctx.request.body;
+    const event = await Event.findOneAndUpdate({elementId}, update);
+    ctx.body = event;
+    // console.log(ctx)
 }
 
 
