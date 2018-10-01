@@ -32,7 +32,7 @@ app.use(BodyParser({
 
 app.use(respond())
 
-setInterval(scraper.scrape, 60000)
+setInterval(scraper.scrape, 300000)
 
 // API routes
 require('./routes')(router)
