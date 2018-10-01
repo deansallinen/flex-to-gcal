@@ -31,8 +31,6 @@ const getAction = async (event) => {
   try {
     const res = await getOneEvent(await event.elementId); // could speed this up with just necessary fields
     if (res) {
-      console.log(res.dateModified);
-      console.log(event.dateModified);
       if (!moment(event.dateModified).isSame(res.dateModified)) {
         // update db Event.
         console.log(!moment(event.dateModified).isSame(res.dateModified) )
