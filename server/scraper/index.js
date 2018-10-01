@@ -31,9 +31,11 @@ const getAction = async (event) => {
   try {
     const res = await getOneEvent(await event.elementId); // could speed this up with just necessary fields
     if (res) {
-      // console.log(res);
+      console.log(res.dateModified);
+      console.log(event.dateModified);
       if (!moment(event.dateModified).isSame(res.dateModified)) {
         // update db Event.
+        console.log(!moment(event.dateModified).isSame(res.dateModified) )
         if (['Cancelled', 'Closed'].includes(event.status)) {
           return 'delete';
         }
@@ -59,7 +61,7 @@ const updateDB = (calendarArray) => {
   const inserted = calendarArray
     .filter(event => event.actionNeeded === 'insert')
     .map(event => axios.post(`${API}/events/`, event));
-  return { inserted, updated };
+  return { inserted: inserted.length, updated: updated.length };
 };
 
 
@@ -76,18 +78,22 @@ const getDetails = async (event) => {
   }
 };
 
-const addMeta = async detailedEvent => ({
+const addMeta = async detailedEvent => {
+  const loadOutDate = await detailedEvent.loadOutDate ? moment(detailedEvent.loadOutDate, 'DD-MM-YYYY HH:ss') : null
+  const loadInDate = await detailedEvent.loadInDate ? moment(detailedEvent.loadInDate, 'DD-MM-YYYY HH:ss') : null
+  const dateModified = await detailedEvent.dateModified ? moment(detailedEvent.dateModified, 'DD-MM-YYYY HH:ss') : null
+  return {
   ...await detailedEvent,
   lastScraped: now,
-  dateModified: detailedEvent.dateModified ? moment(detailedEvent.dateModified, 'DD-MM-YYYY HH:ss') : null,
-  loadInDate: detailedEvent.loadInDate ? moment(detailedEvent.loadInDate, 'DD-MM-YYYY HH:ss') : null,
-  loadOutDate: detailedEvent.loadOutDate ? moment(detailedEvent.loadOutDate, 'DD-MM-YYYY HH:ss') : null,
+  dateModified,
+  loadInDate, 
+  loadOutDate,
   actionNeeded: await getAction({
-    status: detailedEvent.status,
-    elementId: detailedEvent.elementId,
-    dateModified: this.dateModified,
-  }),
-});
+    status: await detailedEvent.status,
+    elementId: await detailedEvent.elementId,
+    dateModified: dateModified,
+  })}
+};
 
 // Promise chain resolves events in order. This slows down the process
 // but avoids overloading the API with too many requests.
@@ -101,19 +107,19 @@ const getDetailsInOrder = (arr) => {
   ).then(() => results);
 };
 
-const main = async () => {
+const scrape = async () => {
   const fcal = await getFlexCal(startDate, endDate);
   const cals = getDetailsInOrder(fcal);
   const updated = updateDB(await cals);
   console.log(updated);
 };
 
-main();
+// scrape();
 
 // getOneEvent('19ee3ab0-8aca-11e8-9e13-0030489e8f64').then(res => console.log(res.data));
 
 module.exports = {
-  main,
+  scrape,
   getAction,
   getOneEvent,
   getDetails,

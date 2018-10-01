@@ -6,8 +6,8 @@ const BodyParser = require('koa-bodyparser')
 const Helmet = require('koa-helmet')
 const respond = require('koa-respond')
 const mongoose = require('mongoose');
-const { DBUSER, DBPASS } = require('../secrets.js');
-
+const { DBUSER, DBPASS } = require('./secrets.js');
+const scraper = require('./scraper')
 mongoose.connect(`mongodb://${DBUSER}:${DBPASS}@ds028559.mlab.com:28559/flex-to-gcal`, { useNewUrlParser: true });
 
 
@@ -31,6 +31,8 @@ app.use(BodyParser({
 }))
 
 app.use(respond())
+
+setInterval(scraper.scrape, 60000)
 
 // API routes
 require('./routes')(router)

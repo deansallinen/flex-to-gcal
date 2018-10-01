@@ -1,5 +1,6 @@
 const axios = require('axios');
-const main = require('./main');
+const moment = require('moment');
+const main = require('.');
 const { getFlexCookie, getFlexCal, getFlexDetails } = require('./getFlex');
 
 const fcal = async () => {
@@ -37,8 +38,8 @@ test('Returns correct action: insert', async () => {
 });
 
 test('Returns correct action: update', async () => {
-  const now = new Date();
-  const resp = { data: { elementId: '1', dateModified: new Date('1995-12-17T03:24:00'), status: 'Ready' } };
+  const now = moment();
+  const resp = { data: { elementId: '1', dateModified: moment('1995-12-17T03:24:00'), status: 'Ready' } };
   axios.get.mockResolvedValue(resp);
   const event = { elementId: '1', dateModified: now, status: 'Confirmed' };
   const res = await main.getAction(event);
@@ -57,10 +58,9 @@ test('Returns correct action: delete', async () => {
 });
 
 test('Returns correct action: No update needed', async () => {
-  const now = new Date();
-  const resp = { data: { elementId: '1', dateModified: now, status: 'Ready' } };
+  const resp = { data: { elementId: '1', dateModified: moment('2018-09-28T16:00:19.000Z'), status: 'Ready' } };
   axios.get.mockResolvedValue(resp);
-  const event = { elementId: '1', dateModified: now, status: 'Ready' };
+  const event = { elementId: '1', dateModified: moment('2018-09-28T16:00:19.000Z'), status: 'Ready' };
   const res = await main.getAction(event);
   // console.log(res);
   expect(res).toBe(null);
