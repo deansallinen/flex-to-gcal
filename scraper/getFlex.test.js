@@ -1,10 +1,9 @@
 const {
   getFlexCookie, getFlexCal, getFlexDetails, getFlexFinancials,
 } = require('./getFlex');
-const { USERNAME, PASSWORD } = require('../secrets');
 
 test('login successful', async () => {
-  const cookie = await getFlexCookie(USERNAME, PASSWORD);
+  const cookie = await getFlexCookie(process.env.FLEXUSER, process.env.FLEXPASS);
   expect(cookie).toBeDefined();
   expect(cookie).toMatch(/JSESSIONID/);
 });

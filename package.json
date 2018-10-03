@@ -1,34 +1,35 @@
 {
-  "name": "",
-  "version": "",
+  "name": "flextogcal",
+  "version": "1.0.0",
+  "description": "Scrapes flex API to database for server to Google Calendar",
+  "main": "index.js",
   "scripts": {
-    "test": "jest"
-  },
-  "jest": {
-    "testURL": "http://localhost"
+    "dev": "nodemon index",
+    "start": "cross-env NODE_ENVIRONMENT=production node index"
   },
   "dependencies": {
-    "@google-cloud/storage": "^2.0.3",
+    "@koa/cors": "^2.2.2",
     "@types/node-fetch": "^2.1.1",
     "axios": "^0.18.0",
+    "cross-env": "^5.2.0",
     "date-fns": "^1.29.0",
-    "deep-equal": "^1.0.1",
-    "diskdb": "^0.1.17",
-    "googleapis": "^27.0.0",
+    "dotenv": "^6.0.0",
     "koa": "^2.5.3",
+    "koa-bodyparser": "^4.2.1",
+    "koa-helmet": "^4.0.0",
+    "koa-logger": "^3.2.0",
+    "koa-respond": "^1.0.1",
     "koa-router": "^7.4.0",
     "lodash": "^4.17.10",
     "moment": "^2.22.2",
     "mongoose": "^5.2.6",
     "node-fetch": "^2.1.2",
-    "node-google-calendar": "^1.1.1",
     "npm": "^6.4.1"
   },
   "devDependencies": {
-    "eslint": "^5.2.0",
-    "eslint-config-airbnb-base": "^13.0.0",
-    "eslint-plugin-import": "^2.13.0",
-    "jest": "^23.4.2",
-    "nodemon": "^1.18.3"
-  }
+    "nodemon": "^1.18.4"
+  },
+  "keywords": [],
+  "author": "Dean Sallinen",
+  "license": "ISC"
 }

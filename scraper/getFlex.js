@@ -1,8 +1,6 @@
 const { format } = require('date-fns');
 const fetch = require('node-fetch');
 const { URLSearchParams } = require('url');
-const { USERNAME, PASSWORD } = require('../secrets');
-
 
 const getFlexCookie = async (user, pass) => {
   const AUTH_URL = 'https://loungeworks.flexrentalsolutions.com/rest/core/authenticate';
@@ -25,7 +23,7 @@ const getFlexCookie = async (user, pass) => {
   }
 };
 
-const COOKIE = getFlexCookie(USERNAME, PASSWORD);
+const COOKIE = getFlexCookie(process.env.FLEXUSER, process.env.FLEXPASS);
 
 const getFlexCal = async (start, end) => {
   const startDate = format(start, 'YYYY-MM-DD');

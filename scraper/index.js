@@ -33,7 +33,7 @@ const getAction = async (event) => {
     if (res) {
       if (!moment(event.dateModified).isSame(res.dateModified)) {
         // update db Event.
-        console.log(!moment(event.dateModified).isSame(res.dateModified) )
+        console.log(!moment(event.dateModified).isSame(res.dateModified));
         if (['Cancelled', 'Closed'].includes(event.status)) {
           return 'delete';
         }
@@ -76,21 +76,22 @@ const getDetails = async (event) => {
   }
 };
 
-const addMeta = async detailedEvent => {
-  const loadOutDate = await detailedEvent.loadOutDate ? moment(detailedEvent.loadOutDate, 'DD-MM-YYYY HH:ss') : null
-  const loadInDate = await detailedEvent.loadInDate ? moment(detailedEvent.loadInDate, 'DD-MM-YYYY HH:ss') : null
-  const dateModified = await detailedEvent.dateModified ? moment(detailedEvent.dateModified, 'DD-MM-YYYY HH:ss') : null
+const addMeta = async (detailedEvent) => {
+  const loadOutDate = await detailedEvent.loadOutDate ? moment(detailedEvent.loadOutDate, 'DD-MM-YYYY HH:ss') : null;
+  const loadInDate = await detailedEvent.loadInDate ? moment(detailedEvent.loadInDate, 'DD-MM-YYYY HH:ss') : null;
+  const dateModified = await detailedEvent.dateModified ? moment(detailedEvent.dateModified, 'DD-MM-YYYY HH:ss') : null;
   return {
-  ...await detailedEvent,
-  lastScraped: now,
-  dateModified,
-  loadInDate, 
-  loadOutDate,
-  actionNeeded: await getAction({
-    status: await detailedEvent.status,
-    elementId: await detailedEvent.elementId,
-    dateModified: dateModified,
-  })}
+    ...await detailedEvent,
+    lastScraped: now,
+    dateModified,
+    loadInDate,
+    loadOutDate,
+    actionNeeded: await getAction({
+      status: await detailedEvent.status,
+      elementId: await detailedEvent.elementId,
+      dateModified,
+    }),
+  };
 };
 
 // Promise chain resolves events in order. This slows down the process

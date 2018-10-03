@@ -1,0 +1,18 @@
+{
+    "build": {
+        "env": {
+            "NODE_ENV": "production",
+            "DBUSER" : "@db-user",
+            "DBPASS" : "@db-pass",
+            "FLEXUSER" : "@flex-user",
+            "FLEXPASS" : "@flex-pass"
+        }
+    },
+    "env": {
+        "NODE_ENV": "production",
+        "DBUSER" : "@db-user",
+        "DBPASS" : "@db-pass",
+        "FLEXUSER" : "@flex-user",
+        "FLEXPASS" : "@flex-pass"
+    }
+}
