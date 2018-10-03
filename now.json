@@ -5,10 +5,12 @@
             "DBUSER" : "@db-user",
             "DBPASS" : "@db-pass",
             "FLEXUSER" : "@flex-user",
+            "TZ" : "America/Vancouver",
             "FLEXPASS" : "@flex-pass"
         }
     },
     "env": {
+        "TZ" : "America/Vancouver",
         "NODE_ENV": "production",
         "DBUSER" : "@db-user",
         "DBPASS" : "@db-pass",

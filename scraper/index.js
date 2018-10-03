@@ -1,12 +1,12 @@
 // scraper
 
-const moment = require('moment');
+const moment = require('moment-timezone');
 const axios = require('axios');
 
 const { getFlexCal, getFlexDetails, getFlexFinancials } = require('./getFlex');
 // const Event = require('../models/Event');
 
-const now = moment();
+const now = moment.tz('America/Vancouver');
 // const startDate = subMonths(now, 1);
 // const endDate = addMonths(now, 1);
 const startDate = now;
@@ -14,6 +14,7 @@ const endDate = now;
 // const startDate = now.subtract(1, 'week');
 // const endDate = now.add(1, 'week');
 
+setInterval(function(){axios.get(`flextogcal-hglzjqywbi.now.sh`)}, 300000) // keepalive for scraper
 
 const API = 'http://localhost:3000/v1';
 
@@ -33,7 +34,6 @@ const getAction = async (event) => {
     if (res) {
       if (!moment(event.dateModified).isSame(res.dateModified)) {
         // update db Event.
-        console.log(!moment(event.dateModified).isSame(res.dateModified));
         if (['Cancelled', 'Closed'].includes(event.status)) {
           return 'delete';
         }
@@ -76,16 +76,23 @@ const getDetails = async (event) => {
   }
 };
 
+const getMoment = dateTime => dateTime ? moment(dateTime, 'DD-MM-YYYY HH:ss') : null
+const setTz = dateTime => dateTime ? moment.tz(dateTime, 'America/Vancouver') : null
+
 const addMeta = async (detailedEvent) => {
-  const loadOutDate = await detailedEvent.loadOutDate ? moment(detailedEvent.loadOutDate, 'DD-MM-YYYY HH:ss') : null;
-  const loadInDate = await detailedEvent.loadInDate ? moment(detailedEvent.loadInDate, 'DD-MM-YYYY HH:ss') : null;
-  const dateModified = await detailedEvent.dateModified ? moment(detailedEvent.dateModified, 'DD-MM-YYYY HH:ss') : null;
+  const loadOutDate = setTz(getMoment(await detailedEvent.loadOutDate)) 
+  const loadInDate = setTz(getMoment(await detailedEvent.loadInDate ))
+  const dateModified = setTz(getMoment(await detailedEvent.dateModified ))
+  const plannedStartDate = setTz(await detailedEvent.plannedStartDate)
+  const plannedEndDate = setTz(await detailedEvent.plannedEndDate)
   return {
     ...await detailedEvent,
     lastScraped: now,
     dateModified,
     loadInDate,
     loadOutDate,
+    plannedStartDate,
+    plannedEndDate,
     actionNeeded: await getAction({
       status: await detailedEvent.status,
       elementId: await detailedEvent.elementId,
