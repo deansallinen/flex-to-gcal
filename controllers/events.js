@@ -5,7 +5,7 @@ const Event = require('../models/Event')
 
 async function findAllToInsert (ctx) {
     // fetch all to Insert
-    const events = await Event.find({typeName: 'Quote'})
+    const events = await Event.find({typeName: 'Quote', actionNeeded: 'insert'})
         .sort('-lastScraped')
         .where('status').nin(['Cancelled', 'Closed']);
     ctx.body = events;
@@ -13,7 +13,7 @@ async function findAllToInsert (ctx) {
 
 async function findAllToUpdate (ctx) {
     // fetch all to Update
-    const events = await Event.find({typeName: 'Quote'})
+    const events = await Event.find({typeName: 'Quote', actionNeeded: 'update'})
         .sort('-lastScraped')
         .where('status').nin(['Cancelled', 'Closed']);
     ctx.body = events;
@@ -21,9 +21,8 @@ async function findAllToUpdate (ctx) {
 
 async function findAllToDelete (ctx) {
     // fetch all to Delete
-    const events = await Event.find({typeName: 'Quote'})
+    const events = await Event.find({typeName: 'Quote', actionNeeded: 'delete'})
         .sort('-lastScraped')
-        .where('status').nin(['Cancelled', 'Closed']);
     ctx.body = events;
 }
 

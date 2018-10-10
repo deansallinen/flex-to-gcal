@@ -14,7 +14,9 @@ const endDate = now;
 // const startDate = now.subtract(1, 'week');
 // const endDate = now.add(1, 'week');
 
-setInterval(function(){axios.get(`flextogcal-hglzjqywbi.now.sh`)}, 300000) // keepalive for scraper
+const keepalive = () => axios.get(`https://flex-to-gcal.now.sh`)
+
+setInterval(keepalive, 300000 ) // keepalive for scraper 300000 = 5 min
 
 const API = 'http://localhost:3000/v1';
 

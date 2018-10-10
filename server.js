@@ -1,3 +1,4 @@
+require('dotenv').config({ debug: process.env.DEBUG })
 const Koa = require('koa')
 const Router = require('koa-router')
 const Logger = require('koa-logger')
@@ -8,6 +9,7 @@ const respond = require('koa-respond')
 const mongoose = require('mongoose');
 // const { DBUSER, DBPASS } = require('./secrets.js');
 const scraper = require('./scraper')
+
 mongoose.connect(`mongodb://${process.env.DBUSER}:${process.env.DBPASS}@ds028559.mlab.com:28559/flex-to-gcal`, { useNewUrlParser: true });
 
 
