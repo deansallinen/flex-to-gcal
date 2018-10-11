@@ -78,13 +78,13 @@ const getDetails = async (event) => {
   }
 };
 
-const getMoment = dateTime => dateTime ? moment(dateTime, 'DD-MM-YYYY HH:ss') : null
+const getMoment = dateTime => dateTime ? moment.tz(dateTime, 'DD-MM-YYYY HH:mm', 'America/Vancouver') : null
 const setTz = dateTime => dateTime ? moment.tz(dateTime, 'America/Vancouver') : null
 
 const addMeta = async (detailedEvent) => {
-  const loadOutDate = setTz(getMoment(await detailedEvent.loadOutDate)) 
-  const loadInDate = setTz(getMoment(await detailedEvent.loadInDate ))
-  const dateModified = setTz(getMoment(await detailedEvent.dateModified ))
+  const loadOutDate = getMoment(await detailedEvent.loadOutDate)
+  const loadInDate = getMoment(await detailedEvent.loadInDate )
+  const dateModified = getMoment(await detailedEvent.dateModified )
   const plannedStartDate = setTz(await detailedEvent.plannedStartDate)
   const plannedEndDate = setTz(await detailedEvent.plannedEndDate)
   return {
@@ -132,4 +132,6 @@ module.exports = {
   getOneEvent,
   getDetails,
   addMeta,
+  getMoment,
+  setTz,
 };

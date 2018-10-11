@@ -95,3 +95,16 @@ test('Add metadata on event object', async () => {
   expect(res.actionNeeded).toBeDefined();
   expect(res.actionNeeded).toBe('update');
 });
+
+
+test('Returns properly formatted UTC date string', async () => {
+  const input = "28/09/2018 13:37"
+  const date = moment(input, 'DD-MM-YYYY HH:mm')
+  const res1 = main.getMoment(input)
+  const res2 = main.setTz(res1)
+  console.log(date.utc().format())
+  console.log(res1.utc().format())
+  console.log(res2)
+  expect(date.utc().format()).not.toEqual(res1.utc().format())
+  expect(date.utc().format()).not.toEqual(res2.utc().format())
+})
