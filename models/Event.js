@@ -54,8 +54,8 @@ eventSchema.virtual('load').get(function () {
     colorId: 4,
     summary: this.isClientPickup ? 'Ship - '.concat(this.title) : 'Load - '.concat(this.title),
     description: this.description.concat(`\nID:${id}`),
-    start: this.isClientPickup ? { date } : { dateTime: this.loadInDate, timeZone: 'America/Vancovuer' },
-    end: this.isClientPickup ? { date } : { dateTime: addHours(this.loadInDate, 1), timeZone: 'America/Vancovuer' },
+    start: this.isClientPickup ? { date } : { dateTime: this.loadInDate, timeZone: 'America/Vancouver' },
+    end: this.isClientPickup ? { date } : { dateTime: addHours(this.loadInDate, 1), timeZone: 'America/Vancouver' },
   };
 });
 
@@ -67,8 +67,8 @@ eventSchema.virtual('strike').get(function () {
     colorId: 1,
     summary: this.isClientPickup ? 'Receive - '.concat(this.title) : 'Strike - '.concat(this.title),
     description: this.description.concat(`\nID:${id}`),
-    start: this.isClientPickup ? { date } : { dateTime: this.loadOutDate, timeZone: 'America/Vancovuer' },
-    end: this.isClientPickup ? { date } : { dateTime: addHours(this.loadOutDate, 1), timeZone: 'America/Vancovuer' },
+    start: this.isClientPickup ? { date } : { dateTime: this.loadOutDate, timeZone: 'America/Vancouver' },
+    end: this.isClientPickup ? { date } : { dateTime: addHours(this.loadOutDate, 1), timeZone: 'America/Vancouver' },
   };
 });
 

@@ -44,12 +44,12 @@ async function create (ctx) {
 
 async function update (ctx) {
     // updates existing event
-    // console.log(ctx.request.body)
+    console.log(ctx.request.body)
     const elementId = ctx.params.id;
     const update = ctx.request.body;
     const event = await Event.findOneAndUpdate({elementId}, update);
     ctx.body = event;
-    // console.log(ctx)
+    console.log(ctx)
 }
 
 
