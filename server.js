@@ -37,6 +37,7 @@ app.use(respond())
 setInterval(scraper.scrape, 300000)
 
 // API routes
+// router.get('/', (ctx, next) => {ctx.body = 'Hello Dean';})
 require('./routes')(router)
 app.use(router.routes())
 app.use(router.allowedMethods())

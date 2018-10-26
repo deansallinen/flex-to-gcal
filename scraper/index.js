@@ -9,10 +9,10 @@ const { getFlexCal, getFlexDetails, getFlexFinancials } = require('./getFlex');
 const now = moment.tz('America/Vancouver');
 // const startDate = subMonths(now, 1);
 // const endDate = addMonths(now, 1);
-const startDate = now;
-const endDate = now;
-// const startDate = now.subtract(1, 'week');
-// const endDate = now.add(1, 'week');
+// const startDate = now;
+// const endDate = now;
+const startDate = moment.tz('America/Vancouver').subtract(1, 'week');
+const endDate = moment.tz('America/Vancouver').add(2, 'week');
 
 const keepalive = () => axios.get(`https://flex-to-gcal.now.sh`)
 
@@ -34,6 +34,9 @@ const getAction = async (event) => {
   try {
     const res = await getOneEvent(await event.elementId); // could speed this up with just necessary fields
     if (res) {
+      // console.log(moment(event.dateModified))
+      // console.log(res.dateModified)
+      // console.log(moment(event.dateModified).isSame(res.dateModified))
       if (!moment(event.dateModified).isSame(res.dateModified)) {
         // update db Event.
         if (['Cancelled', 'Closed'].includes(event.status)) {
@@ -61,7 +64,15 @@ const updateDB = (calendarArray) => {
   const inserted = calendarArray
     .filter(event => event.actionNeeded === 'insert')
     .map(event => axios.post(`${API}/events/`, event));
-  return { inserted: inserted.length, updated: updated.length };
+  const deleted = calendarArray
+    .filter(event => event.actionNeeded === 'delete')
+  const nothing = calendarArray
+    .filter(event => event.actionNeeded === null)
+  return { 
+    inserted: inserted.length, 
+    updated: updated.length,
+    deleted: deleted.length,
+    nothing: nothing.length };
 };
 
 
@@ -114,6 +125,16 @@ const getDetailsInOrder = (arr) => {
     Promise.resolve(), // Starts the chain with a resolved promise
   ).then(() => results);
 };
+
+// const sendNotifications = async (calendarArray) => {
+//   calendarArray.forEach(event => {
+//     let doc = event.typeName === 'Document';
+//     let updateRequired = ['insert', 'update'].includes(event.actionNeeded);
+//     if (doc && updateRequired) {
+
+//     }
+//   })
+// }
 
 const scrape = async () => {
   const fcal = await getFlexCal(startDate, endDate);

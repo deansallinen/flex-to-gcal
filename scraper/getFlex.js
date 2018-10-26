@@ -28,6 +28,7 @@ const COOKIE = getFlexCookie(process.env.FLEXUSER, process.env.FLEXPASS);
 const getFlexCal = async (start, end) => {
   const startDate = format(start, 'YYYY-MM-DD');
   const endDate = format(end, 'YYYY-MM-DD');
+  // console.log(startDate, endDate)
   const templateId = '1c864f10-d3cd-11e7-82d0-0030489e8f64';
 
   const URL = `${'https://loungeworks.flexrentalsolutions.com/rest/calendar/calendar?'
@@ -44,6 +45,7 @@ const getFlexCal = async (start, end) => {
   try {
     const response = await fetch(URL, headers);
     const data = await response.json();
+    console.log("Calendar Length: ", data.length)
     return data;
   } catch (err) {
     throw (err);
