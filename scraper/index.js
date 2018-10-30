@@ -12,15 +12,15 @@ const now = moment.tz('America/Vancouver');
 // const startDate = now;
 // const endDate = now;
 const startDate = moment.tz('America/Vancouver').subtract(1, 'week');
-const endDate = moment.tz('America/Vancouver').add(2, 'week');
+const endDate = moment.tz('America/Vancouver').add(1, 'months');
 
-const keepalive = () => axios.get(`https://flex-to-gcal.now.sh`)
+const keepalive = () => axios.get(`https://flex-to-gcal.now.sh`);
 
-setInterval(keepalive, 300000 ) // keepalive for scraper 300000 = 5 min
+setInterval(keepalive, 300000); // keepalive for scraper 300000 = 5 min
 
 const API = 'http://localhost:3000/v1';
 
-const getOneEvent = async (elementId) => {
+const getOneEvent = async elementId => {
   try {
     const res = await axios.get(`${API}/events/${elementId}`);
     // console.log(res.data);
@@ -30,7 +30,7 @@ const getOneEvent = async (elementId) => {
   }
 };
 
-const getAction = async (event) => {
+const getAction = async event => {
   try {
     const res = await getOneEvent(await event.elementId); // could speed this up with just necessary fields
     if (res) {
@@ -56,7 +56,7 @@ const getAction = async (event) => {
   }
 };
 
-const updateDB = (calendarArray) => {
+const updateDB = calendarArray => {
   // could send an array to the db in the future for a single request?
   const updated = calendarArray
     .filter(event => ['update', 'delete'].includes(event.actionNeeded))
@@ -64,24 +64,24 @@ const updateDB = (calendarArray) => {
   const inserted = calendarArray
     .filter(event => event.actionNeeded === 'insert')
     .map(event => axios.post(`${API}/events/`, event));
-  const deleted = calendarArray
-    .filter(event => event.actionNeeded === 'delete')
-  const nothing = calendarArray
-    .filter(event => event.actionNeeded === null)
-  return { 
-    inserted: inserted.length, 
+  const deleted = calendarArray.filter(
+    event => event.actionNeeded === 'delete'
+  );
+  const nothing = calendarArray.filter(event => event.actionNeeded === null);
+  return {
+    inserted: inserted.length,
     updated: updated.length,
     deleted: deleted.length,
-    nothing: nothing.length };
+    nothing: nothing.length
+  };
 };
 
-
-const getDetails = async (event) => {
+const getDetails = async event => {
   const eventId = await event.elementId;
   try {
     const [details, financials] = await Promise.all([
       getFlexDetails(eventId),
-      getFlexFinancials(eventId),
+      getFlexFinancials(eventId)
     ]);
     return { ...event, ...details, ...financials };
   } catch (err) {
@@ -89,17 +89,21 @@ const getDetails = async (event) => {
   }
 };
 
-const getMoment = dateTime => dateTime ? moment.tz(dateTime, 'DD-MM-YYYY HH:mm', 'America/Vancouver') : null
-const setTz = dateTime => dateTime ? moment.tz(dateTime, 'America/Vancouver') : null
+const getMoment = dateTime =>
+  dateTime
+    ? moment.tz(dateTime, 'DD-MM-YYYY HH:mm', 'America/Vancouver')
+    : null;
+const setTz = dateTime =>
+  dateTime ? moment.tz(dateTime, 'America/Vancouver') : null;
 
-const addMeta = async (detailedEvent) => {
-  const loadOutDate = getMoment(await detailedEvent.loadOutDate)
-  const loadInDate = getMoment(await detailedEvent.loadInDate )
-  const dateModified = getMoment(await detailedEvent.dateModified )
-  const plannedStartDate = setTz(await detailedEvent.plannedStartDate)
-  const plannedEndDate = setTz(await detailedEvent.plannedEndDate)
+const addMeta = async detailedEvent => {
+  const loadOutDate = getMoment(await detailedEvent.loadOutDate);
+  const loadInDate = getMoment(await detailedEvent.loadInDate);
+  const dateModified = getMoment(await detailedEvent.dateModified);
+  const plannedStartDate = setTz(await detailedEvent.plannedStartDate);
+  const plannedEndDate = setTz(await detailedEvent.plannedEndDate);
   return {
-    ...await detailedEvent,
+    ...(await detailedEvent),
     lastScraped: now,
     dateModified,
     loadInDate,
@@ -109,21 +113,26 @@ const addMeta = async (detailedEvent) => {
     actionNeeded: await getAction({
       status: await detailedEvent.status,
       elementId: await detailedEvent.elementId,
-      dateModified,
-    }),
+      dateModified
+    })
   };
 };
 
 // Promise chain resolves events in order. This slows down the process
 // but avoids overloading the API with too many requests.
-const getDetailsInOrder = (arr) => {
+const getDetailsInOrder = arr => {
   const results = [];
-  return arr.reduce(
-    (promiseChain, item) => promiseChain.then(() => getDetails(item)
-      .then(detailedItem => addMeta(detailedItem))
-      .then(data => results.push(data))),
-    Promise.resolve(), // Starts the chain with a resolved promise
-  ).then(() => results);
+  return arr
+    .reduce(
+      (promiseChain, item) =>
+        promiseChain.then(() =>
+          getDetails(item)
+            .then(detailedItem => addMeta(detailedItem))
+            .then(data => results.push(data))
+        ),
+      Promise.resolve() // Starts the chain with a resolved promise
+    )
+    .then(() => results);
 };
 
 // const sendNotifications = async (calendarArray) => {
@@ -154,5 +163,5 @@ module.exports = {
   getDetails,
   addMeta,
   getMoment,
-  setTz,
+  setTz
 };
