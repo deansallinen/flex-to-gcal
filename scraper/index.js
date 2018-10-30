@@ -3,7 +3,11 @@
 const moment = require('moment-timezone');
 const axios = require('axios');
 
-const { getFlexCal, getFlexDetails, getFlexFinancials } = require('./getFlex');
+const {
+  getFlexCal,
+  getFlexDetails,
+  getFlexFinancials
+} = require('./getFlex');
 // const Event = require('../models/Event');
 
 const now = moment.tz('America/Vancouver');
@@ -83,16 +87,19 @@ const getDetails = async event => {
       getFlexDetails(eventId),
       getFlexFinancials(eventId)
     ]);
-    return { ...event, ...details, ...financials };
+    return { ...event,
+      ...details,
+      ...financials
+    };
   } catch (err) {
     throw err;
   }
 };
 
 const getMoment = dateTime =>
-  dateTime
-    ? moment.tz(dateTime, 'DD-MM-YYYY HH:mm', 'America/Vancouver')
-    : null;
+  dateTime ?
+  moment.tz(dateTime, 'DD-MM-YYYY HH:mm', 'America/Vancouver') :
+  null;
 const setTz = dateTime =>
   dateTime ? moment.tz(dateTime, 'America/Vancouver') : null;
 
@@ -125,11 +132,11 @@ const getDetailsInOrder = arr => {
   return arr
     .reduce(
       (promiseChain, item) =>
-        promiseChain.then(() =>
-          getDetails(item)
-            .then(detailedItem => addMeta(detailedItem))
-            .then(data => results.push(data))
-        ),
+      promiseChain.then(() =>
+        getDetails(item)
+        .then(detailedItem => addMeta(detailedItem))
+        .then(data => results.push(data))
+      ),
       Promise.resolve() // Starts the chain with a resolved promise
     )
     .then(() => results);

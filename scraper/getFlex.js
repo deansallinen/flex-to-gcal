@@ -1,6 +1,11 @@
-const { format } = require('date-fns');
+const {
+  format
+} = require('date-fns');
 const fetch = require('node-fetch');
-const { URLSearchParams } = require('url');
+const {
+  URLSearchParams
+} = require('url');
+// const axios = require('axios')
 
 const getFlexCookie = async (user, pass) => {
   const AUTH_URL = 'https://loungeworks.flexrentalsolutions.com/rest/core/authenticate';
