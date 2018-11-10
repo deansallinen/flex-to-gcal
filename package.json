@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "nodemon index",
     "start": "cross-env NODE_ENVIRONMENT=production node index",
-    "test": "TZ=UTC FLEXUSER=ds FLEXPASS=IsErsite8 DBUSER=scraper DBPASS=IsErsite8 jest"
+    "test": "jest"
   },
   "dependencies": {
     "@koa/cors": "^2.2.2",
