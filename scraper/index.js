@@ -13,21 +13,21 @@ const {
 const now = moment.tz('America/Vancouver');
 // const startDate = subMonths(now, 1);
 // const endDate = addMonths(now, 1);
-// const startDate = now;
-// const endDate = now;
-const startDate = moment.tz('America/Vancouver').subtract(1, 'week');
-const endDate = moment.tz('America/Vancouver').add(1, 'months');
+const startDate = now;
+const endDate = now;
+// const startDate = moment.tz('America/Vancouver').subtract(1, 'week');
+// const endDate = moment.tz('America/Vancouver').add(1, 'week');
 
 const keepalive = () => axios.get(`https://flex-to-gcal.now.sh`);
 
 setInterval(keepalive, 300000); // keepalive for scraper 300000 = 5 min
 
-const API = 'http://localhost:3000/v1';
+const API = 'https://flex-to-gcal.now.sh/v1';
 
 const getOneEvent = async elementId => {
   try {
     const res = await axios.get(`${API}/events/${elementId}`);
-    // console.log(res.data);
+    console.log(res);
     return res.data;
   } catch (err) {
     throw err;
@@ -80,26 +80,46 @@ const updateDB = calendarArray => {
   };
 };
 
-const getDetails = async event => {
+const shouldDoUpdate = async (event) => {
   const eventId = await event.elementId;
   try {
-    const [details, financials] = await Promise.all([
-      getFlexDetails(eventId),
-      getFlexFinancials(eventId)
+    const [details, res] = await Promise.all([
+      // getFlexDetails(eventId),
+      // getOneEvent(eventId)
+      getFlexDetails('67926830-6e74-11e8-9689-0030489e8f64'),
+      getOneEvent('67926830-6e74-11e8-9689-0030489e8f64')
     ]);
-    return { ...event,
-      ...details,
-      ...financials
-    };
+
+    console.log(details, res)
+    // if (!moment(details.dateModified).isSame(res.dateModified)) {
+    //   return [true, details]
+    // }
+    // return [false, details]
   } catch (err) {
     throw err;
   }
-};
+}
+
+// const getF = async event => {
+//   const eventId = await event.elementId;
+//   try {
+//     const [diff, details] = await shouldDoUpdate(await event);
+//     const financials = diff ? await getFlexFinancials(eventId) : {};
+//     return {
+//       ...event,
+//       ...details,
+//       ...financials
+//     };
+//   } catch (err) {
+//     throw err;
+//   }
+// };
 
 const getMoment = dateTime =>
   dateTime ?
-  moment.tz(dateTime, 'DD-MM-YYYY HH:mm', 'America/Vancouver') :
-  null;
+    moment.tz(dateTime, 'DD-MM-YYYY HH:mm', 'America/Vancouver') :
+    null;
+
 const setTz = dateTime =>
   dateTime ? moment.tz(dateTime, 'America/Vancouver') : null;
 
@@ -125,6 +145,10 @@ const addMeta = async detailedEvent => {
   };
 };
 
+const mergeObjects = (...args) => {
+  return args.reduce((p, c, i, a) => ({ ...p, ...c }))
+}
+
 // Promise chain resolves events in order. This slows down the process
 // but avoids overloading the API with too many requests.
 const getDetailsInOrder = arr => {
@@ -132,42 +156,37 @@ const getDetailsInOrder = arr => {
   return arr
     .reduce(
       (promiseChain, item) =>
-      promiseChain.then(() =>
-        getDetails(item)
-        .then(detailedItem => addMeta(detailedItem))
-        .then(data => results.push(data))
-      ),
+        promiseChain.then(async () => {
+          const [diff, details] = await shouldDoUpdate(item)
+          if (!diff) {
+            return Promise.resolve();
+          }
+          return getFlexFinancials(item.elementId)
+            .then(financials => mergeObjects(financials, details))
+            .then(detailedItem => addMeta(detailedItem))
+            .then(data => results.push(data))
+        }),
       Promise.resolve() // Starts the chain with a resolved promise
     )
     .then(() => results);
 };
 
-// const sendNotifications = async (calendarArray) => {
-//   calendarArray.forEach(event => {
-//     let doc = event.typeName === 'Document';
-//     let updateRequired = ['insert', 'update'].includes(event.actionNeeded);
-//     if (doc && updateRequired) {
-
-//     }
-//   })
-// }
-
 const scrape = async () => {
+  console.log("Starting scrape... ")
   const fcal = await getFlexCal(startDate, endDate);
-  const cals = getDetailsInOrder(fcal);
-  const updated = updateDB(await cals);
-  console.log(updated);
+  console.log("Received: ", fcal.length)
+  // const cals = getDetailsInOrder(fcal);
+  // const updated = updateDB(await cals);
+  // console.log(updated);
 };
 
-// scrape();
-
-// getOneEvent('19ee3ab0-8aca-11e8-9e13-0030489e8f64').then(res => console.log(res.data));
+scrape();
 
 module.exports = {
   scrape,
   getAction,
   getOneEvent,
-  getDetails,
+  shouldDoUpdate,
   addMeta,
   getMoment,
   setTz

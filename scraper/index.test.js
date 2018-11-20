@@ -19,12 +19,17 @@ test.skip('Finds one event in db', async () => {
   expect(res).toHaveProperty('loadInDate');
 });
 
-test('Returns detailed event', async () => {
+test.only('Returns detailed event', async () => {
   const event = { elementId: '67926830-6e74-11e8-9689-0030489e8f64' };
-  const res = await main.getDetails(event);
-  // console.log(res);
+  const details = { dateModified: '1995-12-17T03:24:00Z' }
+  const database = { dateModified: '1995-12-17T03:24:00Z' }
+  const resp = [details, database]
+  console.log(resp)
+  // axios.get.mockResolvedValue(resp);
+  // axios.get.mockResolvedValue(resp);
+  const res = await main.shouldDoUpdate(event);
+  console.log(res);
   expect(res).toHaveProperty('loadInDate');
-  expect(res).toHaveProperty('plannedRevenue');
 });
 
 test('Returns correct action: insert', async () => {
