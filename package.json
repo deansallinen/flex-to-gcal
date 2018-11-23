@@ -10,7 +10,6 @@
   },
   "dependencies": {
     "@koa/cors": "^2.2.2",
-    "@types/node-fetch": "^2.1.1",
     "axios": "^0.18.0",
     "cross-env": "^5.2.0",
     "date-fns": "^1.29.0",
@@ -25,11 +24,10 @@
     "moment": "^2.22.2",
     "moment-timezone": "^0.5.23",
     "mongoose": "^5.3.8",
-    "node-fetch": "^2.1.2",
-    "npm": "^6.4.1"
+    "npm": "^6.4.1",
+    "@slack/client": "^4.8.0"
   },
   "devDependencies": {
-    "bs-platform": "^4.0.7",
     "jest": "^23.6.0",
     "nodemon": "^1.18.5"
   },

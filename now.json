@@ -2,19 +2,23 @@
     "build": {
         "env": {
             "NODE_ENV": "production",
-            "DBUSER" : "@db-user",
-            "DBPASS" : "@db-pass",
-            "FLEXUSER" : "@flex-user",
-            "TZ" : "America/Vancouver",
-            "FLEXPASS" : "@flex-pass"
+            "DBUSER": "@db-user",
+            "DBPASS": "@db-pass",
+            "FLEXUSER": "@flex-user",
+            "TZ": "America/Vancouver",
+            "FLEXPASS": "@flex-pass",
+            "SLACK_TOKEN": "@slack-token",
+            "API": "@api-url"
         }
     },
     "env": {
-        "TZ" : "America/Vancouver",
+        "TZ": "America/Vancouver",
         "NODE_ENV": "production",
-        "DBUSER" : "@db-user",
-        "DBPASS" : "@db-pass",
-        "FLEXUSER" : "@flex-user",
-        "FLEXPASS" : "@flex-pass"
+        "DBUSER": "@db-user",
+        "DBPASS": "@db-pass",
+        "FLEXUSER": "@flex-user",
+        "FLEXPASS": "@flex-pass",
+        "SLACK_TOKEN": "@slack-token",
+        "API": "@api-url"
     }
 }

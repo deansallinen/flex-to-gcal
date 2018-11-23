@@ -1,0 +1,53 @@
+{
+    "_id": "5bc1244d1c883f4fb12e717b",
+    "displayText": "The Vancouver Club | Oct 13 Extravaganza | SiteMap",
+    "startDate": "2018-10-13T17:00:00.000Z",
+    "endDate": "2018-10-16T00:00:00.000Z",
+    "elementId": "b2cc2e90-cbf2-11e8-8ad6-0030489e8f64",
+    "typeId": null,
+    "typeName": "Document",
+    "locationName": "Vancouver",
+    "personResponsibleName": "Dean Sallinen",
+    "status": "Inquiry",
+    "dateModified": "2018-10-09T18:39:00.000Z",
+    "loadInDate": null,
+    "loadOutDate": null,
+    "plannedRevenue": 0,
+    "lastScraped": "2018-10-12T22:45:28.320Z",
+    "actionNeeded": "insert",
+    "__v": 0,
+    "manager": "Dean Sallinen",
+    "title": "ver Club | Oct 13 Extravaganza | Floorplans",
+    "number": "The Van",
+    "isClientPickup": false,
+    "description": "Status: null\nQuote Number: The Van\nAccount Manager: Mariel Pedraja\nLast Checked: Fri Oct 12 2018 22:45:28 GMT+0000 (UTC)",
+    "load": {
+        "id": "lb2cc2e90cbf211e88ad60030489e8f64",
+        "colorId": 4,
+        "summary": "Load - ver Club | Oct 13 Extravaganza | Floorplans",
+        "description": "Status: null\nQuote Number: The Van\nAccount Manager: Mariel Pedraja\nLast Checked: Fri Oct 12 2018 22:45:28 GMT+0000 (UTC)\nID:lb2cc2e90cbf211e88ad60030489e8f64",
+        "start": {
+            "dateTime": null,
+            "timeZone": "America/Vancouver"
+        },
+        "end": {
+            "dateTime": "1970-01-01T01:00:00.000Z",
+            "timeZone": "America/Vancouver"
+        }
+    },
+    "strike": {
+        "id": "sb2cc2e90cbf211e88ad60030489e8f64",
+        "colorId": 1,
+        "summary": "Strike - ver Club | Oct 13 Extravaganza | Floorplans",
+        "description": "Status: null\nQuote Number: The Van\nAccount Manager: Mariel Pedraja\nLast Checked: Fri Oct 12 2018 22:45:28 GMT+0000 (UTC)\nID:sb2cc2e90cbf211e88ad60030489e8f64",
+        "start": {
+            "dateTime": null,
+            "timeZone": "America/Vancouver"
+        },
+        "end": {
+            "dateTime": "1970-01-01T01:00:00.000Z",
+            "timeZone": "America/Vancouver"
+        }
+    },
+    "id": "5bc1244d1c883f4fb12e717b"
+}

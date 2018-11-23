@@ -1,9 +1,6 @@
-require('dotenv').config()
+// getFlex.js
 
-const {
-  format
-} = require('date-fns');
-
+const { format } = require('date-fns');
 const axios = require('axios')
 
 const getFlexCookie = async (user, pass) => {

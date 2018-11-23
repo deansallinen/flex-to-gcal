@@ -149,5 +149,3 @@ secrets.*
 credentials.json
 token.json
 flex-to-gcal-*.json
-
-reason-scraper
