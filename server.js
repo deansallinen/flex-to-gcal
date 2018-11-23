@@ -33,7 +33,8 @@ app.use(BodyParser({
 
 app.use(respond())
 
-setInterval(scraper.scrape, 86400000)
+// setInterval(scraper.scrape, 86400000) // Once a day
+setInterval(scraper.scrape, 3600000) // Once an hour
 
 // API routes
 // router.get('/', (ctx, next) => {ctx.body = 'Hello Dean';})

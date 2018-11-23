@@ -21,8 +21,8 @@ const startDate = now;
 const endDate = moment.tz('America/Vancouver').add(num, 'week');
 
 // ENABLE BEFORE PUSHING TO NOW
-// const keepalive = () => axios.get(`https://flex-to-gcal.now.sh`);
-// setInterval(keepalive, 300000); // keepalive for scraper 300000 = 5 min
+const keepalive = () => axios.get(`https://flex-to-gcal.now.sh`);
+setInterval(keepalive, 300000); // keepalive for scraper 300000 = 5 min
 
 const scrape = async () => {
   const scrapeStart = new Date();
@@ -49,7 +49,7 @@ const scrape = async () => {
 
 // used for testing
 // DISABLE BEFORE PUSHING TO NOW
-scrape();
+// scrape();
 
 module.exports = {
   scrape,
