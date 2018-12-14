@@ -34,7 +34,8 @@ app.use(BodyParser({
 app.use(respond())
 
 // setInterval(scraper.scrape, 86400000) // Once a day
-setInterval(scraper.scrape, 3600000) // Once an hour
+setInterval(scraper.scrape, 60 * 60 * 1000) // Once an hour
+// setInterval(scraper.scrape, 5 * 60 * 1000) // Every five minutes
 
 // API routes
 // router.get('/', (ctx, next) => {ctx.body = 'Hello Dean';})

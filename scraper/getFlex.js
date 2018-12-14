@@ -5,7 +5,8 @@ const axios = require('axios')
 
 const getFlexCookie = async (user, pass) => {
   const AUTH_URL = 'https://loungeworks.flexrentalsolutions.com/rest/core/authenticate';
-  console.log("User: ", !!user, "Pass: ", !!pass)
+  console.log("User: ", !!user)
+  console.log("Pass: ", !!pass)
   try {
     const res = await axios({
       url: AUTH_URL,

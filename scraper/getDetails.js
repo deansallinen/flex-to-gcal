@@ -11,7 +11,7 @@ const axios = require('axios')
 const API = process.env.API;
 
 const getOneEvent = async elementId => {
-    // console.log("Getting one event...")
+    console.log("Getting one event...", elementId, API)
     try {
         const res = await axios.get(`${API}/events/${elementId}`);
         // console.log(!!res);
@@ -49,7 +49,7 @@ const shouldDoUpdate = async (eventID, status) => {
         }
 
         const detailsDate = getMoment(details.dateModified)
-        const resDate = moment(res.dateModified).format()
+        const resDate = moment.tz(res.dateModified, "America/Vancouver").format()
         const datesMatch = detailsDate == resDate
 
         console.log(detailsDate)

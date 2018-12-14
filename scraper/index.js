@@ -49,7 +49,7 @@ const scrape = async () => {
 
 // used for testing
 // DISABLE BEFORE PUSHING TO NOW
-// scrape();
+scrape();
 
 module.exports = {
   scrape,
