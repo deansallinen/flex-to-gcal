@@ -9,16 +9,8 @@ const { getFlexCal } = require('./getFlex');
 const { post, messages } = require('../slackbot')
 const { summarize } = require('./doNotifications')
 
-const num = 1
+// console.log(process.env)
 
-const now = moment.tz('America/Vancouver');
-// const startDate = subMonths(now, 1);
-// const endDate = addMonths(now, 1);
-const startDate = now;
-// const endDate = now;
-// const startDate = moment.tz('America/Vancouver').subtract(1, 'week');
-// const startDate = moment.tz('America/Vancouver').add(num, 'days');
-const endDate = moment.tz('America/Vancouver').add(num, 'week');
 
 // ENABLE BEFORE PUSHING TO NOW
 const keepalive = () => axios.get(`https://flex-to-gcal.now.sh`);
@@ -27,7 +19,10 @@ setInterval(keepalive, 300000); // keepalive for scraper 300000 = 5 min
 const scrape = async () => {
   const scrapeStart = new Date();
   console.log("Starting scrape... ", scrapeStart)
-  const fcal = await getFlexCal(startDate, endDate);
+  const fcal = await getFlexCal(
+    moment.tz('America/Vancouver'),                 // Start date
+    moment.tz('America/Vancouver').add(1, 'week')   // End Date
+    );
 
   console.log("Received: ", fcal.length)
   const cals = await getDetailsInOrder(fcal);
@@ -49,7 +44,7 @@ const scrape = async () => {
 
 // used for testing
 // DISABLE BEFORE PUSHING TO NOW
-scrape();
+// scrape();
 
 module.exports = {
   scrape,

@@ -149,3 +149,4 @@ secrets.*
 credentials.json
 token.json
 flex-to-gcal-*.json
+.DS_Store
