@@ -13,7 +13,7 @@ const { summarize } = require('./doNotifications')
 
 
 // ENABLE BEFORE PUSHING TO NOW
-const keepalive = () => axios.get(`https://flex-to-gcal.now.sh`);
+const keepalive = () => axios.get(`https://flex-to-gcal.now.sh/v1`);
 setInterval(keepalive, 300000); // keepalive for scraper 300000 = 5 min
 
 const scrape = async () => {

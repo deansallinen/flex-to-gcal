@@ -33,6 +33,7 @@ app.use(BodyParser({
 
 app.use(respond())
 
+scraper.scrape()
 // setInterval(scraper.scrape, 86400000) // Once a day
 setInterval(scraper.scrape, 60 * 60 * 1000) // Once an hour
 // setInterval(scraper.scrape, 5 * 60 * 1000) // Every five minutes
