@@ -49,26 +49,28 @@ Last Checked: ${this.lastScraped}`;
 eventSchema.virtual('load').get(function () {
   const id = 'l'.concat(this.elementId.replace(/-/g, ''));
   const date = format(this.loadInDate, 'YYYY-MM-DD');
+  const isClientPickup = this.venueId === '6a668b70-55e0-11e7-b718-003048de147e'
   return {
     id,
     colorId: 4,
-    summary: this.isClientPickup ? 'Ship - '.concat(this.title) : 'Load - '.concat(this.title),
+    summary: isClientPickup ? 'Ship - '.concat(this.title) : 'Load - '.concat(this.title),
     description: this.description.concat(`\nID:${id}`),
-    start: this.isClientPickup ? { date } : { dateTime: this.loadInDate, timeZone: 'America/Vancouver' },
-    end: this.isClientPickup ? { date } : { dateTime: addHours(this.loadInDate, 1), timeZone: 'America/Vancouver' },
+    start: isClientPickup ? { date } : { dateTime: this.loadInDate, timeZone: 'America/Vancouver' },
+    end: isClientPickup ? { date } : { dateTime: addHours(this.loadInDate, 1), timeZone: 'America/Vancouver' },
   };
 });
 
 eventSchema.virtual('strike').get(function () {
   const id = 's'.concat(this.elementId.replace(/-/g, ''));
   const date = format(this.loadOutDate, 'YYYY-MM-DD');
+  const isClientPickup = this.venueId === '6a668b70-55e0-11e7-b718-003048de147e'
   return {
     id,
     colorId: 1,
-    summary: this.isClientPickup ? 'Receive - '.concat(this.title) : 'Strike - '.concat(this.title),
+    summary: isClientPickup ? 'Receive - '.concat(this.title) : 'Strike - '.concat(this.title),
     description: this.description.concat(`\nID:${id}`),
-    start: this.isClientPickup ? { date } : { dateTime: this.loadOutDate, timeZone: 'America/Vancouver' },
-    end: this.isClientPickup ? { date } : { dateTime: addHours(this.loadOutDate, 1), timeZone: 'America/Vancouver' },
+    start: isClientPickup ? { date } : { dateTime: this.loadOutDate, timeZone: 'America/Vancouver' },
+    end: isClientPickup ? { date } : { dateTime: addHours(this.loadOutDate, 1), timeZone: 'America/Vancouver' },
   };
 });
 

@@ -74,18 +74,14 @@ const newAttachment = (event) => {
 }
 
 const summary = async (args) => {
-
   const { sortedArrays, runTime } = args;
   const { inserted, updated, deleted } = sortedArrays;
-  const summary =
-  {
+  const summary = {
     "fallback": "Required plain-text summary of the attachment.",
-    "pretext": "Summary:",
-    "text": inserted.length && `:sparkle:   ${inserted.length} insertions\n` +
-            updated.length && `:warning:   ${updated.length} updates\n` +
-            deleted.length && `:no_entry_sign:   ${deleted.length} marked for deletion\n` +
-            `:stopwatch:   ${runTime / 1000}s to complete`,
-    "ts": moment().format("X")
+    "pretext": `:stopwatch:   ${runTime / 1000}s to complete`,
+    "text": `${!!inserted.length ? `:sparkle:   ${inserted.length} insertions` : ''}
+${!!updated.length ? `:warning:   ${updated.length} updates` : ''}
+${!!deleted.length ? `:no_entry_sign:   ${deleted.length} marked for deletion` : ''}`,
   }
   // const attachmentsInsert = inserted.map(async each => newAttachment(await each))
   // const attachmentsUpdate = updated.map(async each => newAttachment(await each))

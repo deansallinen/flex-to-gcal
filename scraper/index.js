@@ -42,10 +42,6 @@ const scrape = async () => {
 
 };
 
-// used for testing
-// DISABLE BEFORE PUSHING TO NOW
-// scrape();
-
 module.exports = {
   scrape,
 };
