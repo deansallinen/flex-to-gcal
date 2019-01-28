@@ -45,4 +45,3 @@ To get up and running quickly I used Daniel Balastegui’s “Koalerplate” whi
 I’ve chosen to send all fields to the server and let the Model decide which to save to the database (rather than send only the fields that match the model). This should allow for easier expansion in the future if additional fields are required to be saved. 
 
 I’m also making use of virtuals to do some formatting on retreival. For example, the ‘load’ and ‘strike’ virtuals will allow the client code in Google Apps script to do less processing after hitting our API. They are essentially different views for the same event object, so it makes sense to me to generate them virtually rather than save them.
-

@@ -11,7 +11,7 @@ const axios = require('axios')
 const API = process.env.API;
 
 const getOneEvent = async elementId => {
-    console.log("Getting one event...", elementId, API)
+    console.log("Getting one event...")
     try {
         const res = await axios.get(`${API}/events/${elementId}`);
         // console.log(!!res);
@@ -30,12 +30,12 @@ const getAction = status => {
     return 'update';
 }
 
-const shouldDoUpdate = async (eventID, status) => {
+const shouldDoUpdate = async (eventID, status, cookie) => {
     console.log("\nChecking if update needed: ", eventID)
 
     try {
         const [details, res] = await Promise.all([
-            getFlexDetails(eventID),
+            getFlexDetails(eventID, cookie),
             getOneEvent(eventID)
         ]);
 
@@ -73,14 +73,14 @@ const mergeObjects = (...args) => {
 
 // Promise chain resolves events in order. This slows down the process
 // but avoids overloading the API with too many requests.
-const getDetailsInOrder = arr => {
+const getDetailsInOrder = (arr, cookie) => {
     const results = [];
     return arr
         .reduce(
             (promiseChain, item) =>
                 promiseChain.then(async () => {
 
-                    const details = await shouldDoUpdate(item.elementId, item.status)
+                    const details = await shouldDoUpdate(item.elementId, item.status, cookie)
                     const data = addMeta(details)
 
                     if (!data.actionNeeded) {
@@ -97,7 +97,7 @@ const getDetailsInOrder = arr => {
                         return Promise.resolve();
                     }
 
-                    return getFlexFinancials(item.elementId)
+                    return getFlexFinancials(item.elementId, cookie)
                         .then(financials => mergeObjects(item, financials, data))
                         .then(data => doNotifications(data))
                         .then(data => results.push(data))

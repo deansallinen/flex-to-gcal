@@ -66,16 +66,9 @@ const newAttachment = (event) => {
     "color": colors[actionNeeded],
     "pretext": "Hey <@U5DSN0KC3>!",
     "author_name": prefix[actionNeeded].concat(" ", typeName),
-    // "author_link": "http://flickr.com/bobby/",
-    // "author_icon": "http://flickr.com/icons/bobby.jpg",
     "title": displayText,
     "title_link": `https://loungeworks.flexrentalsolutions.com/ui/goto/${elementId}`,
-    // "text": personResponsibleName,
     fields: typeName === "Quote" ? fields : [],
-    // "image_url": "http://my-website.com/path/to/image.jpg",
-    // "thumb_url": "http://example.com/path/to/thumb.png",
-    // "footer": "Slack API",
-    // "footer_icon": "https://platform.slack-edge.com/img/default_application_icon.png",
     "ts": moment().format("X")
   }
 }
@@ -87,43 +80,11 @@ const summary = async (args) => {
   const summary =
   {
     "fallback": "Required plain-text summary of the attachment.",
-    // "color": "#2eb886",
     "pretext": "Summary:",
-    // "author_name": "Bobby Tables",
-    // "author_link": "http://flickr.com/bobby/",
-    // "author_icon": "http://flickr.com/icons/bobby.jpg",
-    // "title": "Slack API Documentation",
-    // "title_link": "https://api.slack.com/",
-    "text": `:sparkle:   ${inserted.length} insertions
-:warning:   ${updated.length} updates
-:no_entry_sign:   ${deleted.length} marked for deletion
-:stopwatch:   ${runTime / 1000}s to complete`,
-    // "fields": [
-    //   {
-    //     "title": ":sparkle: Inserted",
-    //     "value": inserted.length,
-    //     "short": true
-    //   },
-    //   {
-    //     "title": ":warning: Updated",
-    //     "value": updated.length,
-    //     "short": true
-    //   },
-    //   {
-    //     "title": ":no_entry_sign: Deleted",
-    //     "value": deleted.length,
-    //     "short": true
-    //   },
-    //   {
-    //     "title": ":stopwatch: Run Time",
-    //     "value": runTime / 1000,
-    //     "short": true
-    //   },
-    // ],
-    // "image_url": "http://my-website.com/path/to/image.jpg",
-    // "thumb_url": "http://example.com/path/to/thumb.png",
-    // "footer": "Slack API",
-    // "footer_icon": "https://platform.slack-edge.com/img/default_application_icon.png",
+    "text": inserted.length && `:sparkle:   ${inserted.length} insertions\n` +
+            updated.length && `:warning:   ${updated.length} updates\n` +
+            deleted.length && `:no_entry_sign:   ${deleted.length} marked for deletion\n` +
+            `:stopwatch:   ${runTime / 1000}s to complete`,
     "ts": moment().format("X")
   }
   // const attachmentsInsert = inserted.map(async each => newAttachment(await each))

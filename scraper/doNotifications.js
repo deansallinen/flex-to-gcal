@@ -12,7 +12,7 @@ const doNotifications = (event) => {
     //         postAttach(event)
     //     }
     // }
-    console.log(event.definitionName)
+    // console.log(event.definitionName)
     if (event.definitionName === "Document") {
         postAttach(event)()
     }

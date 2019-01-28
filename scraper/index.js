@@ -18,14 +18,14 @@ setInterval(keepalive, 300000); // keepalive for scraper 300000 = 5 min
 
 const scrape = async () => {
   const scrapeStart = new Date();
-  console.log("Starting scrape... ", scrapeStart)
-  const fcal = await getFlexCal(
+  console.log("\nStarting scrape... ", scrapeStart)
+  const [fcal, COOKIE] = await getFlexCal(
     moment.tz('America/Vancouver'),                 // Start date
     moment.tz('America/Vancouver').add(1, 'week')   // End Date
     );
 
   console.log("Received: ", fcal.length)
-  const cals = await getDetailsInOrder(fcal);
+  const cals = await getDetailsInOrder(fcal, COOKIE);
 
   const sortedArrays = updateDB(cals);
 
