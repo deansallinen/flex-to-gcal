@@ -1,3 +1,5 @@
+![Flex calendar next to Google calendar](/images/flex-to-gcal.png)
+
 # Flex to Gcal 
 
 This project consumes the Flex Rental Solutions API for our event schedule to allow us to run better reporting, create custom Google Calendars, Slackbots, etc. after saving it to a cloud database.
@@ -45,3 +47,9 @@ To get up and running quickly I used Daniel Balastegui’s “Koalerplate” whi
 I’ve chosen to send all fields to the server and let the Model decide which to save to the database (rather than send only the fields that match the model). This should allow for easier expansion in the future if additional fields are required to be saved. 
 
 I’m also making use of virtuals to do some formatting on retreival. For example, the ‘load’ and ‘strike’ virtuals will allow the client code in Google Apps script to do less processing after hitting our API. They are essentially different views for the same event object, so it makes sense to me to generate them virtually rather than save them.
+
+## Slackbot
+
+![Slackbot](/images/slack.png)
+
+In addition to the calendar, the server also provides notifications on custom defined actions. For example, I have set up the server to notify me every time there is a new or updated document in Flex. Instead of manually refreshing the job list multiple times an hour, these notifications allows me to focus on other tasks while still aware of the pulse of the business.
