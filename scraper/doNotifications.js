@@ -16,7 +16,10 @@ const doNotifications = (event) => {
     if (event.definitionName === "Document") {
         postAttach(event)()
     }
-
+    if (event.definitionName === "Rental PO") {
+        postAttach(event)()
+    }
+    
     return event
 }
 
