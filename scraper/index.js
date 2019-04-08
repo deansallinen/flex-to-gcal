@@ -38,9 +38,11 @@ const scrape = async () => {
   console.log("Updated: ", sortedArrays.updated.length)
   console.log("Deleted: ", sortedArrays.deleted.length)
 
-  summarize({ sortedArrays, runTime })
+  // summarize({ sortedArrays, runTime })
 
 };
+
+scrape()
 
 module.exports = {
   scrape,
